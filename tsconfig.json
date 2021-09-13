@@ -27,10 +27,7 @@
           "types/*"
       ]
     },
-    "lib": [
-      "es2017",
-      "dom"
-    ]
+    "lib": ["esnext"]
   },
   "include": [
     "./src"
