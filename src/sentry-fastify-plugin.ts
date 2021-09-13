@@ -7,7 +7,7 @@ import { isString, logger } from "@sentry/utils";
 import { flush, NodeClient } from "@sentry/node";
 import * as domain from "domain";
 
-import type { FastifyInstance, FastifyPluginCallback, FastifyRequest, FastifyReply } from "fastify";
+import type { FastifyError, FastifyInstance, FastifyPluginCallback, FastifyRequest, FastifyReply } from "fastify";
 import fp from "fastify-plugin";
 import {
   extractRequestData,
@@ -16,7 +16,6 @@ import {
   RequestHandlerOptions,
   parseRequest,
   defaultShouldHandleError,
-  MiddlewareError,
   ErrorHandlerOptions,
   isAutoSessionTrackingEnabled,
 } from "./sentry-plugin-helpers";
@@ -24,7 +23,7 @@ import {
 export interface ISentryTracingPluginOpts {
   requestOpts?: RequestHandlerOptions;
   errorOpts?: {
-    shouldHandleError?: (error: MiddlewareError) => boolean;
+    shouldHandleError?: (error: FastifyError) => boolean;
   };
 }
 
@@ -147,6 +146,14 @@ const requestHandler =
     done();
   };
 
+type ErrorHandlerFn = (error: FastifyError, req: FastifyRequest, reply: FastifyReply) => void | Promise<void>;
+
+export const combineErrorHandlers =
+  (errorHandlers: ErrorHandlerFn[]): ErrorHandlerFn =>
+  (error: FastifyError, req: FastifyRequest, reply: FastifyReply) => {
+    errorHandlers.forEach(handler => handler(error, req, reply));
+  };
+
 export const sentryTracingPlugin: FastifyPluginCallback<ISentryTracingPluginOpts> = fp(
   function sentryTracingPluginCb(fastify: FastifyInstance, opts: ISentryTracingPluginOpts, done: () => void) {
     fastify.addHook("preValidation", (req, reply, next) => {
@@ -165,7 +172,7 @@ export const sentryTracingPlugin: FastifyPluginCallback<ISentryTracingPluginOpts
 );
 
 export const errorHandler =
-  (options?: ErrorHandlerOptions) => (error: MiddlewareError, _req: FastifyRequest, res: FastifyReply) => {
+  (options?: ErrorHandlerOptions) => (error: FastifyError, _req: FastifyRequest, res: FastifyReply) => {
     // eslint-disable-next-line @typescript-eslint/unbound-method
     const shouldHandleError = (options && options.shouldHandleError) || defaultShouldHandleError;
 

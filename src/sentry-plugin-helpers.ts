@@ -6,7 +6,7 @@ import { isPlainObject, isString, normalize, stripUrlQueryAndFragment } from "@s
 import * as os from "os";
 import * as url from "url";
 
-import type { FastifyRequest } from "fastify";
+import type { FastifyError, FastifyRequest } from "fastify";
 
 /**
  * Options deciding what parts of the request to use when enhancing an event
@@ -28,19 +28,10 @@ export interface ErrorHandlerOptions {
    * Callback method deciding whether error should be captured and sent to Sentry
    * @param error Captured middleware error
    */
-  shouldHandleError?: (error: MiddlewareError) => boolean;
+  shouldHandleError?: (error: FastifyError) => boolean;
 }
 
 export type TransactionNamingScheme = "path" | "methodPath" | "handler";
-
-export interface MiddlewareError extends Error {
-  status?: number | string;
-  statusCode?: number | string;
-  status_code?: number | string;
-  output?: {
-    statusCode?: number | string;
-  };
-}
 
 /** Default request keys that'll be used to extract data from the request */
 const DEFAULT_REQUEST_KEYS = ["data", "headers", "method", "query_string", "url"];
@@ -248,13 +239,13 @@ export const parseRequest = (event: Event, req: FastifyRequest, options?: ParseR
   return event;
 };
 
-export const getStatusCodeFromResponse = (error: MiddlewareError): number => {
-  const statusCode = error.status || error.statusCode || error.status_code || (error.output && error.output.statusCode);
-  return statusCode ? parseInt(statusCode as string, 10) : 500;
+export const getStatusCodeFromResponse = (error: FastifyError): number => {
+  const statusCode = error.statusCode;
+  return statusCode ?? 500;
 };
 
 /** Returns true if response code is internal server error */
-export const defaultShouldHandleError = (error: MiddlewareError): boolean => {
+export const defaultShouldHandleError = (error: FastifyError): boolean => {
   const status = getStatusCodeFromResponse(error);
   return status >= 500;
 };
