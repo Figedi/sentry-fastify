@@ -118,6 +118,7 @@ const requestHandler =
       localHub.configureScope(scope => {
         scope.addEventProcessor((event: Event) => parseRequest(event, req, options));
         const localClient = localHub.getClient<NodeClient>();
+
         if (isAutoSessionTrackingEnabled(localClient)) {
           const localScope = localHub.getScope();
           if (localScope) {
@@ -146,14 +147,6 @@ const requestHandler =
     done();
   };
 
-type ErrorHandlerFn = (error: FastifyError, req: FastifyRequest, reply: FastifyReply) => void | Promise<void>;
-
-export const combineErrorHandlers =
-  (errorHandlers: ErrorHandlerFn[]): ErrorHandlerFn =>
-  (error: FastifyError, req: FastifyRequest, reply: FastifyReply) => {
-    errorHandlers.forEach(handler => handler(error, req, reply));
-  };
-
 export const sentryTracingPlugin: FastifyPluginCallback<ISentryTracingPluginOpts> = fp(
   function sentryTracingPluginCb(fastify: FastifyInstance, opts: ISentryTracingPluginOpts, done: () => void) {
     fastify.addHook("preValidation", (req, reply, next) => {
@@ -166,7 +159,7 @@ export const sentryTracingPlugin: FastifyPluginCallback<ISentryTracingPluginOpts
     done();
   },
   {
-    name: "condo-sentry-tracing",
+    name: "@figedi/sentry-fastify",
     fastify: "3.1",
   },
 );
@@ -203,7 +196,7 @@ export const errorHandler =
           }
         }
 
-        const eventId = sentryCapture(error);
+        const eventId = sentryCapture(error, _scope);
         // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
         (res as any).sentry = eventId;
       });
