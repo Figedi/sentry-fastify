@@ -1,6 +1,6 @@
 {
   "name": "@figedi/sentry-fastify",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A request-/tracing-middleware for sentry in fastify",
   "license": "MIT",
   "author": "Felix Kaminski",
