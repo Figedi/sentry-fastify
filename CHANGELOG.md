@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.4](https://github.com/Figedi/sentry-fastify/compare/v1.0.3...v1.0.4) (2021-11-05)
+
+
+### Bug Fixes
+
+* takes over req-id as traceId when starting new transactions ([790dd0c](https://github.com/Figedi/sentry-fastify/commit/790dd0c65302a9a86175ee921fb030d3c9478c92))
+
 ### [1.0.3](https://github.com/Figedi/sentry-fastify/compare/v1.0.2...v1.0.3) (2021-09-14)
 
 
