@@ -3,7 +3,7 @@
 import { captureException as sentryCapture, getCurrentHub, startTransaction, withScope } from "@sentry/core";
 import { extractTraceparentData, Span } from "@sentry/tracing";
 import { Event, RequestSessionStatus, Transaction } from "@sentry/types";
-import { isString, logger } from "@sentry/utils";
+import { isString, logger, uuid4 } from "@sentry/utils";
 import { flush, NodeClient } from "@sentry/node";
 import * as domain from "domain";
 
@@ -19,6 +19,7 @@ import {
   ErrorHandlerOptions,
   isAutoSessionTrackingEnabled,
 } from "./sentry-plugin-helpers";
+import { isUuidV4 } from "./utils";
 
 export interface ISentryTracingPluginOpts {
   requestOpts?: RequestHandlerOptions;
@@ -38,6 +39,7 @@ const tracingHandler = (req: FastifyRequest, res: FastifyReply, done: () => void
     {
       name: extractFastifyTransactionName(req, { path: true, method: true }),
       op: "http.server",
+      traceId: req.id && typeof req.id === "string" && isUuidV4(req.id) ? req.id : uuid4(),
       ...traceparentData,
     },
     // extra context passed to the tracesSampler
