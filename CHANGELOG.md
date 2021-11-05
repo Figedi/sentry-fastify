@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.5](https://github.com/Figedi/sentry-fastify/compare/v1.0.4...v1.0.5) (2021-11-05)
+
+
+### Bug Fixes
+
+* proper check for sentry uuid4-variant ([82d88e8](https://github.com/Figedi/sentry-fastify/commit/82d88e82790027cf975af8d83ca442c91beb082c))
+
 ### [1.0.4](https://github.com/Figedi/sentry-fastify/compare/v1.0.3...v1.0.4) (2021-11-05)
 
 
