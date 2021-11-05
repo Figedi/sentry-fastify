@@ -19,7 +19,7 @@ import {
   ErrorHandlerOptions,
   isAutoSessionTrackingEnabled,
 } from "./sentry-plugin-helpers";
-import { isUuidV4 } from "./utils";
+import { isSentryUuid4 } from "./utils";
 
 export interface ISentryTracingPluginOpts {
   requestOpts?: RequestHandlerOptions;
@@ -39,7 +39,7 @@ const tracingHandler = (req: FastifyRequest, res: FastifyReply, done: () => void
     {
       name: extractFastifyTransactionName(req, { path: true, method: true }),
       op: "http.server",
-      traceId: req.id && typeof req.id === "string" && isUuidV4(req.id) ? req.id : uuid4(),
+      traceId: req.id && typeof req.id === "string" && isSentryUuid4(req.id) ? req.id : uuid4(),
       ...traceparentData,
     },
     // extra context passed to the tracesSampler
