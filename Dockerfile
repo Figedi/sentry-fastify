@@ -10,9 +10,6 @@ ARG CI
 COPY package*.json ./
 
 RUN echo "//registry.npmjs.org/:_authToken=${NPM_REGISTRY_TOKEN}" > ~/.npmrc; \
-    wget https://install.goreleaser.com/github.com/tj/node-prune.sh && \
-    # this installs node-prune to bin/node-prune w/ the correct arch-binary
-    sh node-prune.sh && \
     npm ci && \
     rm -rf ~/.npm;
 

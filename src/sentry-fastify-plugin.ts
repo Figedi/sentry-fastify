@@ -13,7 +13,7 @@ export interface ISentryFastifyPluginOpts {
 }
 
 export const fastifySentryPlugin: FastifyPluginCallback<ISentryFastifyPluginOpts> = fp(
-  function (fastify: FastifyInstance, opts: ISentryFastifyPluginOpts, next: () => void) {
+  function fastifySentryPluginCb(fastify: FastifyInstance, opts: ISentryFastifyPluginOpts, next: () => void) {
     fastify.addHook("onError", (_req, _res, error, done) => {
       const shouldHandleError = opts?.shouldHandleError ?? defaultShouldHandleError;
 
