@@ -2,6 +2,13 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+### [1.0.6](https://github.com/Figedi/sentry-fastify/compare/v1.0.5...v1.0.6) (2022-06-13)
+
+
+### Bug Fixes
+
+* removes all (not properly working) tracing parts + upgrades to fastify4 ([361ad24](https://github.com/Figedi/sentry-fastify/commit/361ad24caf64e989151c2711f4494c76fbae8fe9))
+
 ### [1.0.5](https://github.com/Figedi/sentry-fastify/compare/v1.0.4...v1.0.5) (2021-11-05)
 
 
