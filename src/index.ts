@@ -1,2 +1,1 @@
-export * from "./sentry-fastify-plugin";
-export * from "./utils";
+export { fastifySentryPlugin as default } from "./sentry-fastify-plugin";
