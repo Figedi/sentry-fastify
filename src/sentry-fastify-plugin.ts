@@ -5,6 +5,10 @@ import { defaultShouldHandleError } from './sentry-plugin-helpers';
 
 export type SentryFastifyEnrichScope = (request: FastifyRequest, scope: Scope, error: Error) => void;
 export interface ISentryFastifyErrorHandlerOpts {
+    /**
+     * Callback method deciding whether error should be captured and sent to Sentry
+     * @param error Captured middleware error
+     */
     shouldHandleError?: (error: Error) => boolean;
     /**
      * Runs inside `captureException`’s scope callback before the event is sent.
