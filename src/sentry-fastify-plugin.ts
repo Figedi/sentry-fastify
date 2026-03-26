@@ -18,15 +18,14 @@ export interface ISentryFastifyErrorHandlerOpts {
 export const sentryFastifyErrorHandlerPlugin = fp(
     (fastify: FastifyInstance, opts: ISentryFastifyErrorHandlerOpts, next: (err?: Error) => void) => {
         const shouldHandle = opts.shouldHandleError ?? defaultShouldHandleError;
-        const enrichScope = opts.enrichScope ?? ((_req, _scope, _err) => {});
 
-        fastify.addHook('onError', (request: FastifyRequest, _reply, error: Error, done) => {
+        fastify.addHook('onError', (request, _reply, error, done) => {
             if (!shouldHandle(error)) {
                 done();
                 return;
             }
             captureException(error, scope => {
-                enrichScope(request, scope, error);
+                opts.enrichScope?.(request, scope, error);
                 return scope;
             });
             done();

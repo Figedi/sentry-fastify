@@ -3,7 +3,6 @@
     "module": "commonjs",
     "target": "esnext",
     "rootDir": "./src",
-    "baseUrl": ".",
     "sourceRoot": "./src",
     "outDir": "./dist",
     "esModuleInterop": true,
@@ -23,8 +22,7 @@
     "pretty": true,
     "paths": {
       "*": [
-          "node_modules/*",
-          "types/*"
+          "./node_modules/*",
       ]
     },
     "lib": ["esnext"]

@@ -1,17 +1,12 @@
 {
-  "$schema": "https://biomejs.dev/schemas/1.9.3/schema.json",
-  "organizeImports": {
-    "enabled": true,
-    "ignore": ["coverage", "build", "dist", "node_modules", ".turbo", "*.vue"]
-  },
+  "$schema": "https://biomejs.dev/schemas/2.4.9/schema.json",
   "files": { "maxSize": 3000000 },
   "formatter": {
     "enabled": true,
     "lineEnding": "lf",
     "indentWidth": 4,
     "lineWidth": 160,
-    "indentStyle": "space",
-    "ignore": ["coverage", "build", "dist", "node_modules"]
+    "indentStyle": "space"
   },
   "javascript": {
     "formatter": {
@@ -78,7 +73,6 @@
         "noAccumulatingSpread": "off",
         "noDelete": "off"
       }
-    },
-    "ignore": ["coverage", "build", "dist", "node_modules", ".turbo", "*.config.*", "*.json", "*.d.ts"]
+    }
   }
 }

@@ -1,1 +1,1 @@
-export { fastifySentryPlugin as default } from './sentry-fastify-plugin';
+export { sentryFastifyErrorHandlerPlugin as default } from './sentry-fastify-plugin';
