@@ -11,7 +11,7 @@ export interface ISentryFastifyErrorHandlerOpts {
      */
     shouldHandleError?: (error: Error) => boolean;
     /**
-     * Runs inside `captureException`’s scope callback before the event is sent.
+     * Runs inside `captureException`’s scope, can be used to enrich scope (ie attach a user to trace)
      */
     enrichScope?: SentryFastifyEnrichScope;
 }
