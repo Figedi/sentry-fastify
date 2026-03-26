@@ -1,25 +1,34 @@
-import { captureException } from '@sentry/core';
-import { type FastifyError, type FastifyInstance, type FastifyPluginCallback } from 'fastify';
+import { captureException, type Scope } from '@sentry/core';
+import type { FastifyInstance, FastifyRequest } from 'fastify';
 import fp from 'fastify-plugin';
-
 import { defaultShouldHandleError } from './sentry-plugin-helpers';
 
-export interface ISentryFastifyPluginOpts {
+export type SentryFastifyEnrichScope = (request: FastifyRequest, scope: Scope, error: Error) => void;
+export interface ISentryFastifyErrorHandlerOpts {
     /**
      * Callback method deciding whether error should be captured and sent to Sentry
      * @param error Captured middleware error
      */
-    shouldHandleError?: (error: FastifyError) => boolean;
+    shouldHandleError?: (error: Error) => boolean;
+    /**
+     * Runs inside `captureException`’s scope callback before the event is sent.
+     */
+    enrichScope?: SentryFastifyEnrichScope;
 }
+export const sentryFastifyErrorHandlerPlugin = fp(
+    (fastify: FastifyInstance, opts: ISentryFastifyErrorHandlerOpts, next: (err?: Error) => void) => {
+        const shouldHandle = opts.shouldHandleError ?? defaultShouldHandleError;
+        const enrichScope = opts.enrichScope ?? ((_req, _scope, _err) => {});
 
-export const fastifySentryPlugin: FastifyPluginCallback<ISentryFastifyPluginOpts> = fp(
-    function fastifySentryPluginCb(fastify: FastifyInstance, opts: ISentryFastifyPluginOpts, next: () => void) {
-        fastify.addHook('onError', (_req, _res, error, done) => {
-            const shouldHandleError = opts?.shouldHandleError ?? defaultShouldHandleError;
-
-            if (shouldHandleError(error)) {
-                captureException(error);
+        fastify.addHook('onError', (request: FastifyRequest, _reply, error: Error, done) => {
+            if (!shouldHandle(error)) {
+                done();
+                return;
             }
+            captureException(error, scope => {
+                enrichScope(request, scope, error);
+                return scope;
+            });
             done();
         });
 
